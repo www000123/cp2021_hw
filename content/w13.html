@@ -139,8 +139,7 @@ img.add_border {
           </div>
           
         </header>
-    <div id="tipue_search_content">HW2 << <a href='HW2.html'>Previous</a> <a href='HW3.html'>Next</a> >> HW3<br /><h1>run-2</h1>
-<p></p>
+    <div id="tipue_search_content">Exam << <a href='Exam.html'>Previous</a> <a href='HW1-2.html'>Next</a> >> HW1-2<br /><h1>w13</h1>
 <!-- 導入 brython 程式庫 -->
 <script src="./../cmsimde/static/brython.js"></script>
 <script src="./../cmsimde/static/brython_stdlib.js"></script>
@@ -176,6 +175,7 @@ function doSave(storage_id, filename){
 <p>
 <script type="text/python3">
 from browser import document as doc
+from browser import html
 import ace
 # 清除畫布
 def clear_bd(ev):
@@ -184,31 +184,16 @@ def clear_bd(ev):
 # Brython 3.3.4 內建的 container 名稱為  'container' 且 turtle 輸出為 svg 必須使用 div 訂定 id
 Ace = ace.Editor(editor_id="kw_editor", console_id="kw_console", container_id="kw__container", storage_id="kw_py_src" )
 # 從 gist 取出程式碼後, 放入 editor 作為 default 程式
-def run():
-    # 利用 get 取下 src 變數值
-    try:
-        url = doc.query["src"]
-    except:
-        url = "https://gist.githubusercontent.com/mdecourse/e896a4705a95ac8cc4147b355b0e87ef/raw/8954b8280c524c5781dc3c0b3565bc489d3aa3a3/cango_gear1.py"
-    prog = open(url).read()
-
-    # 將程式載入編輯區
-    Ace.editor.setValue(prog)
-    Ace.editor.scrollToRow(0)
-    Ace.editor.gotoLine(0)
-    # 直接執行程式
-    #ns = {'__name__':'__main__'}
-    #exec(prog, ns)
-    # 按下 run 按鈕
-    Ace.run()
-
+url = "https://gist.githubusercontent.com/www000123/b8152a10732b2c15a4bb4fd35cce1124/raw/c49ba3913b29ebaf600f7326fa8d81cd0d54fef4/w13"
+data = open(url).read()
+Ace.editor.setValue(data)
+Ace.editor.scrollToRow(0)
+Ace.editor.gotoLine(0)
 # 執行程式, 顯示輸出結果與清除輸出結果及對應按鈕綁定
 doc['kw_run'].bind('click', Ace.run)
 doc['kw_show_console'].bind('click', Ace.show_console)
 doc['kw_clear_console'].bind('click', Ace.clear_console)
 doc['clear_bd'].bind('click', clear_bd)
-# 呼叫函式執行
-run()
 </script>
 </p>
 <p><!-- 用來顯示程式碼的 editor 區域 --></p>
@@ -220,18 +205,53 @@ run()
 <p><button id="kw_run">Run</button> <button id="kw_show_console">Output</button> <button id="kw_clear_console">清除輸出區</button><button id="clear_bd">清除繪圖區</button><button onclick="window.location.reload()">Reload</button></p>
 <!-- 執行與清除按鈕結束 -->
 <p></p>
-<!-- 程式執行 ouput 區 -->
-<div style="width: 100%; height: 100%;"><textarea autocomplete="off" id="kw_console"></textarea></div>
-<!-- Brython 程式執行的結果, 都以 brython_div 作為切入位置 -->
+<!-- 程式編輯檔案 -->
+<div style="width: 200%; height: 200%;"><textarea autocomplete="off" id="kw_console" style="width: 506px; height: 1006px;"></textarea></div>
+<!-- 程式輸入位置 -->
 <div id="brython_div"></div>
-<p></p>
-<!-- 導入 gearUtils-0.9.js Cango 齒輪繪圖程式庫 -->
-<script src="https://mde.tw/cp2021/cmsimde/static/Cango-24v03-min.js"></script>
-<script src="https://mde.tw/cp2021/cmsimde/static/gearUtils-09.js"></script>
-<script src="https://mde.tw/cp2021/cmsimde/static/SVGpathUtils-6v03-min.js"></script>
-<script src="https://mde.tw/cp2021/cmsimde/static/sylvester.js"></script>
-<script src="https://mde.tw/cp2021/cmsimde/static/PrairieDraw.js"></script>
-<br />HW2 << <a href='HW2.html'>Previous</a> <a href='HW3.html'>Next</a> >> HW3</div>
+<div class="col-md-0" height="1" id="graphics-column" width="1"></div>
+<!-- 開始建立程式範例以及對應按鈕 -->
+<p><button id="snake">Snake</button><button id="clock">Clock</button><button id="two_link_ik">Two link IK</button></p>
+<!-- clock 開始 -->
+<script type="text/python3">
+# 導入 document 與 beditor
+from browser import document
+import beditor
+# 設定按鈕 id 名稱 name 與 原始碼對應 url
+name = "clock"
+url = "https://gist.githubusercontent.com/mdecourse/379f02862e9dfd95dbc5241d4faa2ad4/raw/e3dc77e68bbfb8f00eef2e78d3c8d2323b0f17da/clock.py"
+# 利用 open 與 read 取回原始碼
+src = open(url).read()
+# 將原始碼放入 editor
+e = beditor.editor(src, "kw_editor", "kw_console", "kw__container", "kw_py_src")
+# 設定 id 為 name 的元件按下後會執行 e.prog, 意即將原始碼放入 editor 中
+document[name].bind('click', e.prog)
+</script>
+<!-- clock 結束 -->
+<p><!-- snake 開始 -->
+<script type="text/python3">
+from browser import document as doc
+# 導入位於 static 目錄下的 beditor.py 
+import beditor
+# 利用 beditor.py 中的 editor 類別建立案例, 對應到 snake
+snake_url = "https://gist.githubusercontent.com/mdecourse/d306a1f57e53bfd6466eaae20bcb9439/raw/2160a12b9fec9707a120a383ed5d38b9b78a02cf/snake.py"
+snake_src = open(snake_url).read()
+snake = beditor.editor(snake_src, "kw_editor", "kw_console", "kw__container", "kw_py_src")
+# id 為 "snake" 的按鈕點按時, 執行 snake 物件中的 prog 方法
+doc["snake"].bind('click', snake.prog)
+</script>
+</p>
+<p><!-- snake 結束--></p>
+<!-- two link robot ik starts -->
+<script type="text/python3">
+# based on https://mde.tw/cd2021/content/W14-W15.html
+from browser import document as doc
+import beditor
+url = "https://gist.githubusercontent.com/mdecourse/b58d23e73ff57c9ab1334f2e01cdc6e0/raw/2a0393fff3f621bc0267f2102697e586f99b8282/two_link_ik.py"
+src = open(url).read()
+two_link_ik = beditor.editor(src, "kw_editor", "kw_console", "kw__container", "kw_py_src")
+doc["two_link_ik"].bind('click', two_link_ik.prog)
+</script><br />Exam << <a href='Exam.html'>Previous</a> <a href='HW1-2.html'>Next</a> >> HW1-2</div>
         
     <!-- footer -->
       <div class="container">
